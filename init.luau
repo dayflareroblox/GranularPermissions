@@ -126,7 +126,7 @@ function GranularPermissions:RegisterReplacementsBulk(Replacements: {{Replacemen
 	end
 
 	return true
-end
+end 
 
 --[=[
 	This function registers a callback function to evaluate permissions dynamically.
