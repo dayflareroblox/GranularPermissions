@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[141],{7676:s=>{s.exports=JSON.parse('[{"type":"link","href":"/api/GranularPermissions","label":"\u200bGranular\u200bPermissions"}]')}}]);
