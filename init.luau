@@ -1,14 +1,24 @@
-local GranularPermissions = {}
-GranularPermissions.__index = GranularPermissions
-
--- // PACKAGES
 local TableUtil = require(script.Parent:WaitForChild("TableUtil"))
 local stringUtility = require(script:WaitForChild("stringUtility"))
 
 --[=[
-	@class MyFirstClass
+	@class GranularPermissions
 
-	This is my first class.
+	The `GranularPermissions` class is designed to manage and evaluate complex permission sets for players. 
+	It supports customizable permission checks, dynamic replacements, and flexible splitting syntax.
+]=]
+local GranularPermissions = {}
+GranularPermissions.__index = GranularPermissions
+
+--[=[
+    @prop Configuration {SplittingSyntax: string}
+
+    @within GranularPermissions
+]=]
+
+--[=[
+    Creates a new GranularPermissions instance.
+    @return GranularPermissions -- Returns the GranularPermissions instance.
 ]=]
 function GranularPermissions.new()
     local self = setmetatable({}, GranularPermissions)
@@ -22,6 +32,13 @@ function GranularPermissions.new()
     return self
 end
 
+--[=[
+	This function checks if a player is authorized based on a given set of permissions.
+
+	@param Player Player -- The player whose permissions are being checked
+	@param Permissions {any} -- A list of permissions to evaluate
+	@return boolean -- Returns `true` if the player is authorized, otherwise `false`
+]=]
 function GranularPermissions:IsAuthorised(Player: Player, Permissions: {any}): boolean
     local AllRequired = TableUtil.Find(Permissions, function(Item: string)
         return Item == "[RequireAll]"
@@ -74,16 +91,35 @@ function GranularPermissions:IsAuthorised(Player: Player, Permissions: {any}): b
     return AllRequired
 end
 
+--[=[
+	This function retrieves and executes a registered callback for the provided arguments.
+
+	@param Callback string -- The name of the callback to execute
+	@param ... any -- Additional arguments to pass to the callback
+	@return boolean? -- Returns the result of the callback, or `nil` if the callback is not found
+]=]
 function GranularPermissions:GetCallback(Callback: string, ...)
     if self.Callbacks[Callback] then
         return self.Callbacks[Callback](self, ...)
     end
 end
 
+--[=[
+	This function registers a single replacement for use in permission strings.
+
+	@param ReplacementName string -- The name of the replacement
+	@param ReplaceWith string | number -- The value to replace with
+]=]
 function GranularPermissions:RegisterReplacement(ReplacementName: string, ReplaceWith: string | number)
 	self.Replacements[ReplacementName] = ReplaceWith
 end
 
+--[=[
+	This function registers multiple replacements in bulk.
+
+	@param Replacements {{ReplacementName: string, ReplaceWith: string | number}} -- A list of replacements to register
+	@return boolean -- Returns `true` after successfully registering all replacements
+]=]
 function GranularPermissions:RegisterReplacementsBulk(Replacements: {{ReplacementName: string, ReplaceWith: string | number}}): boolean
 	for _, Replacement in pairs(Replacements) do
 		self:RegisterReplacement(Replacement.ReplacementName, Replacement.ReplaceWith)
@@ -92,6 +128,13 @@ function GranularPermissions:RegisterReplacementsBulk(Replacements: {{Replacemen
 	return true
 end
 
+--[=[
+	This function registers a callback function to evaluate permissions dynamically.
+
+	@param CallbackName string -- The name of the callback
+	@param Callback (self: GranularPermissions, ...any) -> boolean -- The function to execute for the callback
+	@return boolean -- Returns `true` if the callback was registered, or `false` if it already exists
+]=]
 function GranularPermissions:RegisterCallback(CallbackName: string, Callback): boolean
 	if self.Callbacks[CallbackName] then
 		return false
@@ -101,7 +144,9 @@ function GranularPermissions:RegisterCallback(CallbackName: string, Callback): b
 	end
 end
 
-
+--[=[
+	This function cleans up and destroys the `GranularPermissions` instance.
+]=]
 function GranularPermissions:Destroy()
     
 end
