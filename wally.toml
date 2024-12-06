@@ -1,0 +1,8 @@
+[package]
+name = "dayflareroblox/granularpermissions"
+version = "2.1.0"
+registry = "https://github.com/UpliftGames/wally-index"
+realm = "shared"
+
+[dependencies]
+TableUtil = "sleitnick/table-util@1.2.1"
